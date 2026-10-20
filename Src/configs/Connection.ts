@@ -1,13 +1,14 @@
 import dns from "dns";
 import mongoose from "mongoose";
-import environment from "./Environment";
+import environment from "./environment";
 const connectDB = async () => {
   try {
-    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+    dns.setServers(environment.dnsServers);
     await mongoose.connect(environment.dbUrl);
     console.log("Database connected successfully");
   } catch (error) {
-    console.log("error connecting to database");
+    console.error("Database connection failed");
+    throw error;
   }
 };
 

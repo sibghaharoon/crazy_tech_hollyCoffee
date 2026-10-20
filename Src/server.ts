@@ -1,16 +1,18 @@
 import cors from "cors";
 import express from "express";
-import connectDB from "./configs/Connection";
-import environment from "./configs/Environment";
-import router from "./routes/Index.Route";
+import { createServer } from "http";
+import connectDB from "./configs/connection";
+import environment from "./configs/environment";
+import errorMiddleware from "./middlewares/Error";
+import router from "./routes/Route";
 
 const app = express();
 app.use(
   express.json({
-    limit: "50mb",
+    limit: "1mb",
   }),
 );
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(
   cors({
     origin: environment.corsOrigin,
@@ -22,10 +24,41 @@ app.get("/", (_, res) => {
 });
 
 app.use(router);
-
-const port = environment.port;
-connectDB().then(() => {
-  app.listen(port, () => {
-    console.log(`Server is running at port ${port}`);
+app.use((_req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+    code: "NOT_FOUND",
   });
 });
+app.use(errorMiddleware);
+
+const port = environment.port;
+const server = createServer(app);
+
+const startServer = async () => {
+  await connectDB();
+  server.listen(port, () => {
+    console.log(`Server is running at port ${port}`);
+  });
+};
+
+const shutdown = async (signal: string) => {
+  console.log(`${signal} received; shutting down`);
+  server.close(async () => {
+    const mongoose = await import("mongoose");
+    await mongoose.default.disconnect();
+    process.exit(0);
+  });
+};
+
+process.once("SIGINT", () => void shutdown("SIGINT"));
+process.once("SIGTERM", () => void shutdown("SIGTERM"));
+
+if (require.main === module) {
+  void startServer().catch(() => {
+    process.exitCode = 1;
+  });
+}
+
+export default app;
