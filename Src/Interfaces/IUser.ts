@@ -1,3 +1,5 @@
+import type { Types } from 'mongoose'
+
 export declare namespace IUser {
 	type Role = 'buyer' | 'seller' | 'admin'
 	type Status = 'active' | 'inactive'
@@ -8,6 +10,7 @@ export declare namespace IUser {
 		email?: string
 		phoneNumber?: string
 		photoUrl?: string
+		locationId?: Types.ObjectId
 		role?: Role
 		status?: Status
 	}

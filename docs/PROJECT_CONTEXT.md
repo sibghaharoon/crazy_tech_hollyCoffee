@@ -94,7 +94,7 @@ Src/
 └── server.ts      # Express bootstrap
 ```
 
-There is currently one persisted model, `User`, and one repository, `UserRepository`. There is no verified implementation yet for locations, stores, categories, products, carts, orders, payment, wallet, delivery, drivers, rewards, reviews, inventory, or store management.
+There are currently two persisted models, `User` and the user-selected `Location`, with corresponding repositories. There is no verified implementation yet for stores, categories, products, carts, orders, payment, wallet, delivery, drivers, rewards, reviews, inventory, or store management.
 
 ## Authentication and current user flow
 
@@ -110,14 +110,15 @@ The router mounts authenticated user routes under `/api/v1/user`.
 
 | Method | Path | Authentication | Current behavior |
 |---|---|---|---|
-| GET | `/api/v1/user/me` | Firebase bearer token | Returns the authenticated user's public profile fields in `{ success: true, data: ... }`. |
-| PATCH | `/api/v1/user/me` | Firebase bearer token | Updates only `name` and `photoUrl`; rejects unknown fields and invalid/empty updates. |
+| GET | `/api/v1/user/profile` | Firebase bearer token | Returns the authenticated user's safe profile fields in `{ success: true, data: ... }`. |
+| PATCH | `/api/v1/user/profile` | Firebase bearer token | Updates only `name` and `photoUrl`; rejects unknown fields and invalid/empty updates. |
+| PATCH | `/api/v1/user/location` | Firebase bearer token | Saves the selected city/state and, for GPS selection, validated latitude/longitude. |
 
 The implementation currently returns error envelopes shaped as `{ success: false, message, code }` for authentication, validation, and not-found failures. The root route `/` returns a plain health-style text response: `Helo from server side;`.
 
 ### Known implementation issue
 
-`Src/controllers/Auth.Controller.ts` exports the handler as `get`, while `Src/routes/Auth.Route.ts` references `AuthController.me`. The current `npm run build` fails with `TS2339: Property 'me' does not exist`. This must be resolved before treating `GET /api/v1/user/me` as a working endpoint. The intended fix is a small naming alignment, but it is deliberately not applied by this documentation change.
+The profile routes use the lowercase `user.controller.ts` module and expose the same `/profile` resource for reading and updating the authenticated profile. The build and runtime checks must pass before treating these routes as production-ready.
 
 ## Current user data model
 
@@ -133,6 +134,8 @@ The `User` Mongoose model stores:
 - `createdAt` and `updatedAt`: Mongoose timestamps.
 
 MongoDB access follows the current route/middleware → controller → repository → Mongoose flow. Firebase verification is isolated in `AuthService`; ordinary user CRUD remains in `UserRepository`.
+
+The user-selected `Location` record stores one current location per user using `userId`, `city`, `state`, and optional GPS coordinates. It is separate from future store/branch locations and from delivery addresses captured during checkout.
 
 ## Configuration and secrets
 

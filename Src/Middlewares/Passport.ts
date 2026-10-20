@@ -23,28 +23,9 @@ const Passport = {
         });
     }
 
+    let token;
     try {
-      const token = await AuthService.verifyToken(header.slice(7).trim());
-      const user = await UserRepository.findOrCreateByFirebaseUid(token.uid, {
-        firebaseUid: token.uid,
-        name: token.name,
-        email: token.email,
-        phoneNumber: token.phone_number,
-        photoUrl: token.picture,
-      });
-
-      if (user.status === "inactive") {
-        return res
-          .status(403)
-          .json({
-            success: false,
-            message: "User is inactive",
-            code: "USER_INACTIVE",
-          });
-      }
-
-      req.user = user;
-      return next();
+      token = await AuthService.verifyToken(header.slice(7).trim());
     } catch {
       return res
         .status(401)
@@ -54,6 +35,25 @@ const Passport = {
           code: "AUTH_INVALID",
         });
     }
+
+    const user = await UserRepository.findOrCreateByFirebaseUid(token.uid, {
+      firebaseUid: token.uid,
+      name: token.name,
+      email: token.email,
+      phoneNumber: token.phone_number,
+      photoUrl: token.picture,
+    });
+
+    if (user.status === "inactive") {
+      return res.status(403).json({
+        success: false,
+        message: "User is inactive",
+        code: "USER_INACTIVE",
+      });
+    }
+
+    req.user = user;
+    return next();
   },
 };
 

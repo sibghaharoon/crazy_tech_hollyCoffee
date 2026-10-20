@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsc && node --watch Dist/server.js",
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "start": "node Dist/server.js"
   },
   "keywords": [],
