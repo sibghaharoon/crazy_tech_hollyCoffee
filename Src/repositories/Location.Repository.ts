@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import type { ILocation } from "../interfaces/ILocation";
+import type { ILocationModule } from "../interfaces/ILocation";
 import LocationModel from "../models/Location";
 
 class LocationRepository {
@@ -7,7 +7,7 @@ class LocationRepository {
     return LocationModel.findOne({ userId }).lean();
   }
 
-  async upsertByUserId(userId: Types.ObjectId, data: ILocation.UpdateObj) {
+  async upsertByUserId(userId: Types.ObjectId, data: ILocationModule.IUpdateLocation) {
     const coordinates =
       data.latitude !== undefined && data.longitude !== undefined
         ? { latitude: data.latitude, longitude: data.longitude }

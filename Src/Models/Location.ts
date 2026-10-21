@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import type { ILocation } from "../interfaces/ILocation";
+import type { ILocationModule } from "../interfaces/ILocation";
 
-const locationSchema = new Schema<ILocation.Model>(
+const locationSchema = new Schema<ILocationModule.ILocation>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -34,4 +34,4 @@ const locationSchema = new Schema<ILocation.Model>(
   { timestamps: true },
 );
 
-export default model<ILocation.Model>("Location", locationSchema);
+export default model<ILocationModule.ILocation>("Location", locationSchema);

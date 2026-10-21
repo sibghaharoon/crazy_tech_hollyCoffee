@@ -26,6 +26,9 @@ const environment = {
 	firebaseProjectId: required('FIREBASE_PROJECT_ID'),
 	firebaseClientEmail: required('FIREBASE_CLIENT_EMAIL'),
 	firebasePrivateKey: required('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
+	cloudinaryCloudName:process.env.CLOUDINARY_CLOUD_NAME,
+	cloudinaryApiKey:process.env.CLOUDINARY_API_KEY,
+	cloudinaryApiSecret:process.env.CLOUDINARY_API_SECRET,
 
 }
 

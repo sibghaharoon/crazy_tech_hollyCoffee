@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { IUser } from "../interfaces/IUser";
+import { IUserModule } from "../interfaces/IUser";
 
-const userSchema = new Schema<IUser.CreateObj>(
+const userSchema = new Schema<IUserModule.ICreateUser>(
   {
     firebaseUid: {
       type: String,
@@ -22,7 +22,18 @@ const userSchema = new Schema<IUser.CreateObj>(
       type: String,
       trim: true,
     },
-    photoUrl: {
+    gender: {
+      type: String,
+      enum: ["male", "female", "other", "prefer_not_to_say"],
+    },
+    dob: {
+      type: Date,
+    },
+    profileImage: {
+      type: String,
+      trim: true,
+    },
+    profileImagePublicId: {
       type: String,
       trim: true,
     },
@@ -40,4 +51,4 @@ const userSchema = new Schema<IUser.CreateObj>(
   { timestamps: true },
 );
 
-export default model<IUser.CreateObj>("User", userSchema);
+export default model<IUserModule.ICreateUser>("User", userSchema);

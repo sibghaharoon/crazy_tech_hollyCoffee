@@ -1,7 +1,7 @@
 import type { Types } from 'mongoose'
 
-export declare namespace ILocation {
-	interface Model {
+export declare namespace ILocationModule {
+	interface ILocation {
 		_id: Types.ObjectId
 		userId: Types.ObjectId
 		city: string
@@ -12,7 +12,7 @@ export declare namespace ILocation {
 		updatedAt?: Date
 	}
 
-	interface UpdateObj {
+	interface IUpdateLocation {
 		city: string
 		state: string
 		latitude?: number

@@ -2,9 +2,9 @@ import type { NextFunction, Request, Response } from "express";
 import type { Types } from "mongoose";
 import UserRepository from "../repositories/User.Repository";
 import AuthService from "../services/Auth.Service";
-import type { IUser } from "../interfaces/IUser";
+import type { IUserModule } from "../interfaces/IUser";
 
-export type AuthenticatedUser = IUser.CreateObj & {
+export type AuthenticatedUser = IUserModule.ICreateUser & {
   _id: Types.ObjectId;
   createdAt?: Date;
   updatedAt?: Date;
@@ -41,7 +41,7 @@ const Passport = {
       name: token.name,
       email: token.email,
       phoneNumber: token.phone_number,
-      photoUrl: token.picture,
+      profileImage: token.picture,
     });
 
     if (user.status === "inactive") {
