@@ -1,6 +1,6 @@
 import { IUserModule } from "../interfaces/IUser";
 import { Types } from "mongoose";
-import UserModel from "../models/User";
+import UserModel from "../models/user.model";
 
 class UserRepository {
   async findById(userId: Types.ObjectId) {

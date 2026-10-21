@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
 import type { IUserModule } from "../interfaces/IUser";
 import type { ICategoryModule } from "../interfaces/ICategory";
-import CategoryRepository from "../repositories/Category.Repository";
-import CloudinaryService from "./Cloudinary.Service";
+import CategoryRepository from "../repositories/category.repository";
+import CloudinaryService from "./cloudinary.service";
 
 type ServiceError = Error & { statusCode: number };
 type UploadedImages = {

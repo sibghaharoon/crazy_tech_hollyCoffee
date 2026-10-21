@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import type { ILocationModule } from "../interfaces/ILocation";
-import LocationModel from "../models/Location";
+import LocationModel from "../models/location.model";
 
 class LocationRepository {
   async findByUserId(userId: Types.ObjectId) {

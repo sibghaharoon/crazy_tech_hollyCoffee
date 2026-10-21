@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express'
 import type { IUserModule } from '../interfaces/IUser'
-import type { AuthenticatedUser } from '../middlewares/Passport'
-import parseProfileUpdate from '../validators/Profile.Validator'
-import ProfileService from '../services/Profile.Service'
+import type { AuthenticatedUser } from '../middlewares/passport'
+import parseProfileUpdate from '../validators/profile.validator'
+import ProfileService from '../services/profile.service'
 
 const toProfileResponse = (user: AuthenticatedUser): IUserModule.ProfileResponse => ({
 	id: user._id,

@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import environment from "./Environment";
+import environment from "./environment";
 
 const configureCloudinary = () => {
   if (
