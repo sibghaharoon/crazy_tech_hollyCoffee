@@ -23,7 +23,7 @@ The product flow below is the requested product context. It describes planned be
 2. The application shows stores available for that location.
 3. The application shows the categories available for the selected store/location.
 4. The user opens a product details screen.
-5. Product details indicate whether the product is available through **Divine**, **Holy**, or both. The exact meaning of Divine and Holy, and whether they are stores, brands, menus, or fulfillment options, still requires confirmation before schema design.
+5. Product details offer the available product variants **Divine** and/or **Holy**, similar to selectable variants such as Small and Large. Divine and Holy are not stores or branches.
 
 ### Cart and checkout
 
@@ -112,13 +112,22 @@ The router mounts authenticated user routes under `/api/v1/user`.
 |---|---|---|---|
 | GET | `/api/v1/user/profile` | Firebase bearer token | Returns the authenticated user's safe profile fields in `{ success: true, data: ... }`. |
 | PATCH | `/api/v1/user/profile` | Firebase bearer token | Updates only `name` and `photoUrl`; rejects unknown fields and invalid/empty updates. |
+| GET | `/api/v1/user/location` | Firebase bearer token | Returns the authenticated user's current selected location, or `null` when none is saved. |
 | PATCH | `/api/v1/user/location` | Firebase bearer token | Saves the selected city/state and, for GPS selection, validated latitude/longitude. |
+| GET | `/api/v1/categories` | Firebase bearer token | Returns active categories sorted by `sortOrder`, then name. |
+| GET | `/api/v1/categories/all` | Firebase bearer token + `admin` role | Returns all categories, including inactive categories, for admin management. |
+| POST | `/api/v1/categories` | Firebase bearer token + `admin` role | Creates a category with an optional `image` multipart file uploaded to Cloudinary. |
+| PATCH | `/api/v1/categories/:categoryId` | Firebase bearer token + `admin` role | Updates category fields and optionally replaces its Cloudinary image using the `image` multipart file field. |
+| GET | `/api/v1/branches` | Firebase bearer token | Returns active branches. |
+| GET | `/api/v1/branches/nearby` | Firebase bearer token | Returns active branches near the authenticated user's saved location, using GPS when available and city/state fallback otherwise. |
+| GET | `/api/v1/branches/nearby-by-coordinates` | Firebase bearer token | Returns active branches near validated latitude/longitude query values. |
+| GET | `/api/v1/branches/all` | Firebase bearer token + `admin` role | Returns all branches, including inactive branches, for admin management. |
+| POST | `/api/v1/branches` | Firebase bearer token + `admin` role | Creates a branch with validated coordinates. |
+| PATCH | `/api/v1/branches/:branchId` | Firebase bearer token + `admin` role | Updates branch fields or deactivates a branch. |
 
 The implementation currently returns error envelopes shaped as `{ success: false, message, code }` for authentication, validation, and not-found failures. The root route `/` returns a plain health-style text response: `Helo from server side;`.
 
-### Known implementation issue
-
-The profile routes use the lowercase `user.controller.ts` module and expose the same `/profile` resource for reading and updating the authenticated profile. The build and runtime checks must pass before treating these routes as production-ready.
+Category management currently uses the implemented `admin` role for writes. The role matrix remains subject to product approval as additional staff roles are introduced.
 
 ## Current user data model
 
@@ -135,7 +144,11 @@ The `User` Mongoose model stores:
 
 MongoDB access follows the current route/middleware → controller → repository → Mongoose flow. Firebase verification is isolated in `AuthService`; ordinary user CRUD remains in `UserRepository`.
 
-The user-selected `Location` record stores one current location per user using `userId`, `city`, `state`, and optional GPS coordinates. It is separate from future store/branch locations and from delivery addresses captured during checkout.
+The user-selected `Location` record stores one current location per user using `userId`, `city`, `state`, and optional GPS coordinates. It is separate from future store/branch locations and from delivery addresses captured during checkout. Future catalog design should keep store/branch availability separate from product variants such as Divine and Holy.
+
+The `Category` model stores `name`, optional `description`, Cloudinary `image` URL and `imagePublicId`, `isActive`, `sortOrder`, and timestamps. Category image uploads use `multipart/form-data`, are held temporarily in memory with a 5 MB limit, and are streamed to Cloudinary; image bytes are not stored in MongoDB. Categories are currently global because store/branch availability has not yet been modeled. Product and branch-specific filtering will be added after the store/branch contract is approved.
+
+The `Branch` model stores a physical coffee-shop location using `name`, `city`, `state`, `address`, a GeoJSON `Point`, `isActive`, and timestamps. The point has a MongoDB `2dsphere` index and stores coordinates as `[longitude, latitude]`. Branches are deactivated rather than deleted so historical order references can remain valid.
 
 ## Configuration and secrets
 
@@ -152,7 +165,8 @@ The current environment contract is documented by `.env.example`:
 
 The following product and backend decisions are open and must be approved before implementation:
 
-- Exact location semantics and the relationship between Divine and Holy.
+- Store/branch location model, nearby-search radius/fallback behavior, and catalog availability by branch.
+- Product variant structure and pricing/inventory rules for Divine and Holy.
 - Product/catalog, cart, order, payment, delivery, inventory, store, wallet, rewards, and review entities.
 - Role capabilities and record-level authorization for each future feature.
 - Whether `buyer`, `seller`, and `admin` remain the approved roles and how they map to business responsibilities.

@@ -1,7 +1,7 @@
-import type { ILocation } from "../interfaces/ILocation";
+import type { ILocationModule } from "../interfaces/ILocation";
 
 export type LocationValidationResult =
-  | { success: true; data: ILocation.UpdateObj }
+  | { success: true; data: ILocationModule.IUpdateLocation }
   | { success: false; message: string; code: string };
 
 const parseLocationUpdate = (body: unknown): LocationValidationResult => {
