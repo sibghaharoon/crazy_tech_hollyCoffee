@@ -2,8 +2,8 @@
 
 ## Mandatory references
 Before any non-trivial change, read:
-- `docs/PROJECT_CONTEXT.md`
-- `docs/ARCHITECTURE_POLICY.md`
+- `docs/project_context.md`
+- `docs/architecture_policy.md`
 - the actual repository implementation.
 
 The actual code and approved backend contract establish **what is implemented**; these documents describe the intended design and guardrails. If they disagree, report the conflict before changing behavior. Never silently use a proposed endpoint, field, policy, or permission as an implemented fact.
@@ -51,7 +51,7 @@ Controllers may coordinate repositories and services; repositories own **all nor
 
 Use **plain-object controllers**, not controller classes. Do not wrap every controller method in `try/catch`; unexpected failures go to centralized error middleware. Zod validates body, params, and query before the controller where practical.
 
-Each feature has one type-only `I<Feature>` namespace in `Src/interfaces/I<Feature>.ts`, with feature-owned shapes such as `Model`, `CreateObj`, and `UpdateObj`; share cross-feature types instead of duplicating them. `IAuth` contains only authentication-specific types and references user types when needed. API JSON fields and Mongoose document fields use the established camelCase convention. Keep Mongoose schemas/models in `Src/models/` and keep persistence MongoDB-specific.
+Each feature has one type-only `I<Feature>` namespace in `Src/interfaces/i<feature>.ts`, with feature-owned shapes such as `Model`, `CreateObj`, and `UpdateObj`; share cross-feature types instead of duplicating them. `IAuth` contains only authentication-specific types and references user types when needed. API JSON fields and Mongoose document fields use the established camelCase convention. Keep Mongoose schemas/models in `Src/models/` and keep persistence MongoDB-specific.
 
 ## Authentication, roles, and user scope
 Verify Firebase ID tokens on the backend, then find or create the MongoDB `User` by the verified Firebase UID. Firebase handles phone-number OTP authentication; the backend must not treat a client-submitted OTP, user ID, role, wallet owner, order owner, or location as authorization proof. Existing role/status values are backend-controlled and must not be replaced from token claims.
@@ -70,11 +70,11 @@ The currently implemented `User.role` values are `buyer`, `seller`, and `admin`,
 - External providers and AI, if later added, never bypass roles, expose hidden records, invent business figures, or change orders, payments, wallets, rewards, or profiles without the normal authorization and audit path.
 
 ## API, errors, and safety
-Expose versioned routes under `/api/v1`, lowercase kebab-case paths. The Holy Coffee flow in `docs/PROJECT_CONTEXT.md` is planned product context, not proof that routes already exist; finalize each contract before coding. Use company JSON envelopes, sensible HTTP codes, shared error types, centralized error middleware, pagination defaults, and a maintained `postman/` collection. Do not invent DB columns, endpoints, environment names, request/response fields, role matrices, wallet limits, reward rules, payment methods, delivery statuses, or review policies.
+Expose versioned routes under `/api/v1`, lowercase kebab-case paths. The Holy Coffee flow in `docs/project_context.md` is planned product context, not proof that routes already exist; finalize each contract before coding. Use company JSON envelopes, sensible HTTP codes, shared error types, centralized error middleware, pagination defaults, and a maintained `postman/` collection. Do not invent DB columns, endpoints, environment names, request/response fields, role matrices, wallet limits, reward rules, payment methods, delivery statuses, or review policies.
 
 Never log tokens, credentials, OTPs, private documents, payment details, wallet secrets, addresses, driver contact data, or unnecessary personal information. Protect secret-bearing configuration, apply least privilege, use safe upload URLs, and audit sensitive actions. Firebase phone authentication is not a substitute for application-level authorization or transaction verification.
 
 ## Quality and production
 Use transactions for multi-record atomic changes. Add constraints/indexes tied to real invariants; avoid unbounded reads and N+1 queries. Test invalid/expired Firebase tokens, inactive users, location-scope denial, cart price/availability changes, duplicate checkout/payment attempts, order ownership, delivery/pickup transitions, driver-contact access, wallet double-spend/replay cases, balance sharing, reward redemption, and review eligibility. Use applicable `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build` **if those scripts exist**; never claim checks ran when they did not.
 
-Never commit, push, merge, deploy, modify production, reset databases, run destructive database operations, or change secrets without explicit instruction and applicable approval. No `any`, `@ts-ignore`, empty catches, fake tests, or unrelated rewrites to hide failures. See `docs/ARCHITECTURE_POLICY.md`.
+Never commit, push, merge, deploy, modify production, reset databases, run destructive database operations, or change secrets without explicit instruction and applicable approval. No `any`, `@ts-ignore`, empty catches, fake tests, or unrelated rewrites to hide failures. See `docs/architecture_policy.md`.

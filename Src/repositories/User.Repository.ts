@@ -1,4 +1,4 @@
-import { IUserModule } from "../interfaces/IUser";
+import { IUserModule } from "../interfaces/iuser";
 import { Types } from "mongoose";
 import UserModel from "../models/user.model";
 

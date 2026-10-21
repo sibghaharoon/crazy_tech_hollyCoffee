@@ -1,6 +1,6 @@
 import { Router } from "express";
 import categoryController from "../controllers/category.controller";
-import categoryUpload from "../middlewares/category-upload";
+import upload from "../middlewares/upload";
 import Passport from "../middlewares/passport";
 import requireRoles from "../middlewares/role";
 
@@ -12,7 +12,7 @@ categoryRoute.post(
   "/",
   Passport.auth,
   requireRoles("admin"),
-  categoryUpload.fields([
+  upload.fields([
     { name: "image", maxCount: 1 },
     { name: "banner", maxCount: 1 },
   ]),
@@ -22,7 +22,7 @@ categoryRoute.patch(
   "/:categoryId",
   Passport.auth,
   requireRoles("admin"),
-  categoryUpload.fields([
+  upload.fields([
     { name: "image", maxCount: 1 },
     { name: "banner", maxCount: 1 },
   ]),

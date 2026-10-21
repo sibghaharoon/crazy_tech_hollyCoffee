@@ -1,5 +1,5 @@
 import type { Types } from "mongoose";
-import type { ICategoryModule } from "../interfaces/ICategory";
+import type { ICategoryModule } from "../interfaces/icategory";
 import CategoryModel from "../models/category.model";
 
 class CategoryRepository {

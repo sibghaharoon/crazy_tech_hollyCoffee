@@ -1,4 +1,4 @@
-import type { ILocationModule } from "../interfaces/ILocation";
+import type { ILocationModule } from "../interfaces/ilocation";
 
 export type LocationValidationResult =
   | { success: true; data: ILocationModule.IUpdateLocation }

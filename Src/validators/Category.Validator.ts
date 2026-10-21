@@ -1,4 +1,4 @@
-import type { ICategoryModule } from "../interfaces/ICategory";
+import type { ICategoryModule } from "../interfaces/icategory";
 
 export type CategoryValidationResult<T> =
   | { success: true; data: T }

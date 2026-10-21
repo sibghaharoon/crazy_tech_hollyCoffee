@@ -1,4 +1,4 @@
-import type { IUserModule } from "../interfaces/IUser";
+import type { IUserModule } from "../interfaces/iuser";
 
 export type ProfileValidationResult =
   | { success: true; data: IUserModule.IUpdateUser }

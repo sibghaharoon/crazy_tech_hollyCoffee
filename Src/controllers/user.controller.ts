@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import type { IUserModule } from '../interfaces/IUser'
+import type { IUserModule } from '../interfaces/iuser'
 import type { AuthenticatedUser } from '../middlewares/passport'
 import parseProfileUpdate from '../validators/profile.validator'
 import ProfileService from '../services/profile.service'

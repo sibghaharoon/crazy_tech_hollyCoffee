@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IUserModule } from "../interfaces/IUser";
+import { IUserModule } from "../interfaces/iuser";
 
 const userSchema = new Schema<IUserModule.ICreateUser>(
   {
@@ -30,10 +30,6 @@ const userSchema = new Schema<IUserModule.ICreateUser>(
       type: Date,
     },
     profileImage: {
-      type: String,
-      trim: true,
-    },
-    profileImagePublicId: {
       type: String,
       trim: true,
     },
