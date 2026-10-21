@@ -67,13 +67,13 @@ After an eligible order, the user can submit a review for that order. The backen
 ## Technology and runtime
 
 - Node.js with Express 5 and strict TypeScript.
-- CommonJS output compiled from `Src/` into `Dist/`.
+- CommonJS output compiled from `Src/` into `dist/`.
 - MongoDB accessed through Mongoose. The configured connection is read from `DB_URL`.
 - Firebase Admin Authentication verifies bearer ID tokens.
 - CORS is configured from `CORS_ORIGIN`.
 - Environment values are loaded through `Src/configs/Environment.ts`.
 - The application starts from `Src/server.ts`; it connects to MongoDB and then listens on `PORT` (default `3100`).
-- `npm run build` invokes TypeScript compilation. `npm run dev` compiles and starts Node watch mode against `Dist/server.js`. `npm start` starts the compiled server.
+- `npm run build` invokes TypeScript compilation. `npm run dev` compiles and starts Node watch mode against `dist/server.js`. `npm start` starts the compiled server.
 
 The repository currently has no verified test, lint, or typecheck scripts beyond the build command shown above. Do not claim those checks have run unless scripts are added and executed.
 
@@ -198,4 +198,4 @@ Until these decisions are approved and implemented, they remain proposals rather
 
 ## Source-of-truth precedence
 
-For implemented behavior, use the actual source code, schemas, route registration, and verified API contract. `AGENTS.md` and `docs/ARCHITECTURE_POLICY.md` provide engineering instructions and guardrails. This project context records current facts and approved decisions only; it must be updated when the implementation or an approved product decision changes.
+For implemented behavior, use the actual source code, schemas, route registration, and verified API contract. `AGENTS.md` and `docs/architecture_policy.md` provide engineering instructions and guardrails. This project context records current facts and approved decisions only; it must be updated when the implementation or an approved product decision changes.

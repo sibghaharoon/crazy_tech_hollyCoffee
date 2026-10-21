@@ -4,10 +4,8 @@ export declare namespace ICategoryModule {
   interface ICategories {
     _id: Types.ObjectId;
     name: string;
-    image?: string;
-    imagePublicId: string;
+    image: string;
     banner?: string;
-    bannerPublicId?: string;
     isActive: boolean;
     createdAt?: Date;
     updatedAt?: Date;
@@ -16,9 +14,7 @@ export declare namespace ICategoryModule {
   interface ICreateCategories {
     name: string;
     image?: string;
-    imagePublicId?: string;
     banner?: string;
-    bannerPublicId?: string;
     isActive?: boolean;
   }
 
@@ -27,6 +23,5 @@ export declare namespace ICategoryModule {
     image?: string;
     isActive?: boolean;
     banner?: string;
-    bannerPublicId?: string;
   }
 }

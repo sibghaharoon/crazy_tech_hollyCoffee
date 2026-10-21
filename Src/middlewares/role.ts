@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import type { IUserModule } from "../interfaces/IUser";
+import type { IUserModule } from "../interfaces/iuser";
 
 const requireRoles = (...allowedRoles: IUserModule.Role[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
