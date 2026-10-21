@@ -1,6 +1,6 @@
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import environment from "./Environment";
+import environment from "./environment";
 
 const firebaseApp =
   getApps()[0] ??

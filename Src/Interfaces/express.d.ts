@@ -1,4 +1,4 @@
-import type { AuthenticatedUser } from "../middlewares/Passport";
+import type { AuthenticatedUser } from "../middlewares/passport";
 
 export {};
 

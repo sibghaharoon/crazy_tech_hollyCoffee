@@ -1,10 +1,10 @@
 import cors from "cors";
 import express from "express";
 import { createServer } from "http";
-import connectDB from "./configs/Connection";
-import environment from "./configs/Environment";
-import errorMiddleware from "./middlewares/Error";
-import router from "./routes/Route";
+import connectDB from "./configs/connection";
+import environment from "./configs/environment";
+import errorMiddleware from "./middlewares/error";
+import router from "./routes/route";
 
 const app = express();
 app.use(

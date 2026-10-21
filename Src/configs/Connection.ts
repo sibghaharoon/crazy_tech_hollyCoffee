@@ -1,6 +1,6 @@
 import dns from "dns";
 import mongoose from "mongoose";
-import environment from "./Environment";
+import environment from "./environment";
 const connectDB = async () => {
   try {
     dns.setServers(environment.dnsServers);

@@ -1,8 +1,8 @@
 import { Router } from "express";
 import categoryController from "../controllers/category.controller";
-import categoryUpload from "../middlewares/CategoryUpload";
-import Passport from "../middlewares/Passport";
-import requireRoles from "../middlewares/Role";
+import categoryUpload from "../middlewares/category-upload";
+import Passport from "../middlewares/passport";
+import requireRoles from "../middlewares/role";
 
 const categoryRoute = Router();
 

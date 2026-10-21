@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import CategoryService from "../services/Category.Service";
-import categoryValidator from "../validators/Category.Validator";
+import CategoryService from "../services/category.service";
+import categoryValidator from "../validators/category.validator";
 
 const getCategoryFiles = (req: Request) => {
   const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;

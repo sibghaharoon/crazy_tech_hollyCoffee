@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 import type { ICategoryModule } from "../interfaces/ICategory";
-import CategoryModel from "../models/Category";
+import CategoryModel from "../models/category.model";
 
 class CategoryRepository {
   async list(filter: { isActive?: boolean }) {

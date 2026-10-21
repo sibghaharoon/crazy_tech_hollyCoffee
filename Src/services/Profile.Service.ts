@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import UserRepository from "../repositories/User.Repository";
-import CloudinaryService from "./Cloudinary.Service";
+import UserRepository from "../repositories/user.repository";
+import CloudinaryService from "./cloudinary.service";
 import type { IUserModule } from "../interfaces/IUser";
 
 type ProfileImage = {

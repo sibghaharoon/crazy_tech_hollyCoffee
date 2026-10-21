@@ -1,4 +1,4 @@
-import configureCloudinary from "../configs/Cloudinary";
+import configureCloudinary from "../configs/cloudinary";
 
 class CloudinaryService {
   async uploadCategoryImage(buffer: Buffer, mimetype: string) {
