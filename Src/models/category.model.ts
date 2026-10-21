@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import type { ICategoryModule } from "../interfaces/ICategory";
+import type { ICategoryModule } from "../interfaces/icategory";
 
 const categorySchema = new Schema<ICategoryModule.ICategories>(
   {
@@ -13,15 +13,7 @@ const categorySchema = new Schema<ICategoryModule.ICategories>(
       type: String,
       trim: true,
     },
-    imagePublicId: {
-      type: String,
-      trim: true,
-    },
     banner: {
-      type: String,
-      trim: true,
-    },
-    bannerPublicId: {
       type: String,
       trim: true,
     },

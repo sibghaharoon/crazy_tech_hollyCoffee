@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import type { ILocationModule } from "../interfaces/ILocation";
+import type { ILocationModule } from "../interfaces/ilocation";
 import LocationModel from "../models/location.model";
 
 class LocationRepository {

@@ -1,11 +1,10 @@
 import { Types } from "mongoose";
 import UserRepository from "../repositories/user.repository";
 import CloudinaryService from "./cloudinary.service";
-import type { IUserModule } from "../interfaces/IUser";
+import type { IUserModule } from "../interfaces/iuser";
 
 type ProfileImage = {
   profileImage: string;
-  profileImagePublicId: string;
 };
 
 class ProfileService {
@@ -27,22 +26,22 @@ class ProfileService {
         ...uploadedImage,
       });
 
-      if (image && existingUser.profileImagePublicId) {
-        await this.cleanupImage(existingUser.profileImagePublicId);
+      if (image && existingUser.profileImage) {
+        await this.cleanupImage(existingUser.profileImage);
       }
 
       return user;
     } catch (error) {
-      if (uploadedImage.profileImagePublicId) {
-        await this.cleanupImage(uploadedImage.profileImagePublicId);
+      if (uploadedImage.profileImage) {
+        await this.cleanupImage(uploadedImage.profileImage);
       }
       throw error;
     }
   }
 
-  private async cleanupImage(publicId: string) {
+  private async cleanupImage(imageUrl: string) {
     try {
-      await CloudinaryService.deleteImage(publicId);
+      await CloudinaryService.deleteImage(imageUrl);
     } catch {
       // Image cleanup failure must not hide the successful profile update.
     }

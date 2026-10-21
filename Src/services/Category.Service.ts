@@ -1,15 +1,13 @@
 import { Types } from "mongoose";
-import type { IUserModule } from "../interfaces/IUser";
-import type { ICategoryModule } from "../interfaces/ICategory";
+import type { IUserModule } from "../interfaces/iuser";
+import type { ICategoryModule } from "../interfaces/icategory";
 import CategoryRepository from "../repositories/category.repository";
 import CloudinaryService from "./cloudinary.service";
 
 type ServiceError = Error & { statusCode: number };
 type UploadedImages = {
   image?: string;
-  imagePublicId?: string;
   banner?: string;
-  bannerPublicId?: string;
 };
 
 const serviceError = (message: string, statusCode: number): ServiceError => {
@@ -71,11 +69,11 @@ class CategoryService {
         ...uploadedImages,
       });
 
-      if (image && existingCategory.imagePublicId) {
-        await this.cleanupImage(existingCategory.imagePublicId);
+      if (image && existingCategory.image) {
+        await this.cleanupImage(existingCategory.image);
       }
-      if (banner && existingCategory.bannerPublicId) {
-        await this.cleanupImage(existingCategory.bannerPublicId);
+      if (banner && existingCategory.banner) {
+        await this.cleanupImage(existingCategory.banner);
       }
       return category;
     } catch (error) {
@@ -90,17 +88,17 @@ class CategoryService {
     }
   }
 
-  private async cleanupImage(publicId: string) {
+  private async cleanupImage(imageUrl: string) {
     try {
-      await CloudinaryService.deleteImage(publicId);
+      await CloudinaryService.deleteImage(imageUrl);
     } catch {
       console.error("Cloudinary cleanup failed");
     }
   }
 
   private async cleanupUploadedImages(images: UploadedImages) {
-    if (images.imagePublicId) await this.cleanupImage(images.imagePublicId);
-    if (images.bannerPublicId) await this.cleanupImage(images.bannerPublicId);
+    if (images.image) await this.cleanupImage(images.image);
+    if (images.banner) await this.cleanupImage(images.banner);
   }
 }
 

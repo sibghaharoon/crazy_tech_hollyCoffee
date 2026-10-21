@@ -13,7 +13,6 @@ export declare namespace IUserModule {
 		gender?: Gender
 		dob?: Date
 		profileImage?: string
-		profileImagePublicId?: string
 		locationId?: Types.ObjectId
 		role?: Role
 		status?: Status
@@ -24,7 +23,6 @@ export declare namespace IUserModule {
 		gender?: Gender
 		dob?: Date
 		profileImage?: string
-		profileImagePublicId?: string
 	}
 
 	interface ProfileResponse {
