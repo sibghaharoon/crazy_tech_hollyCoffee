@@ -1,10 +1,11 @@
 import { Types } from "mongoose";
 import UserRepository from "../repositories/user.repository";
-import CloudinaryService from "./cloudinary.service";
+import R2Service from "./r2.service";
 import type { IUserModule } from "../interfaces/iuser";
 
 type ProfileImage = {
   profileImage: string;
+  profileImageKey: string;
 };
 
 class ProfileService {
@@ -17,7 +18,7 @@ class ProfileService {
     if (!existingUser) return null;
 
     const uploadedImage: Partial<ProfileImage> = image
-      ? await CloudinaryService.uploadProfileImage(image.buffer, image.mimetype)
+      ? await this.uploadProfileImage(image)
       : {};
 
     try {
@@ -26,22 +27,27 @@ class ProfileService {
         ...uploadedImage,
       });
 
-      if (image && existingUser.profileImage) {
-        await this.cleanupImage(existingUser.profileImage);
+      if (image && existingUser.profileImageKey) {
+        await this.cleanupImage(existingUser.profileImageKey);
       }
 
       return user;
     } catch (error) {
-      if (uploadedImage.profileImage) {
-        await this.cleanupImage(uploadedImage.profileImage);
+      if (uploadedImage.profileImageKey) {
+        await this.cleanupImage(uploadedImage.profileImageKey);
       }
       throw error;
     }
   }
 
-  private async cleanupImage(imageUrl: string) {
+  private async uploadProfileImage(image: Express.Multer.File): Promise<ProfileImage> {
+    const uploaded = await R2Service.uploadImage(image.buffer, image.mimetype, "profiles");
+    return { profileImage: uploaded.url, profileImageKey: uploaded.key };
+  }
+
+  private async cleanupImage(imageKey: string) {
     try {
-      await CloudinaryService.deleteImage(imageUrl);
+      await R2Service.deleteImage(imageKey);
     } catch {
       // Image cleanup failure must not hide the successful profile update.
     }

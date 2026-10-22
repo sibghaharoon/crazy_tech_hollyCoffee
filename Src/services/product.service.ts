@@ -3,10 +3,10 @@ import type { IProductModule } from "../interfaces/iproduct";
 import type { IUserModule } from "../interfaces/iuser";
 import CategoryRepository from "../repositories/category.repository";
 import ProductRepository from "../repositories/product.repository";
-import CloudinaryService from "./cloudinary.service";
+import R2Service from "./r2.service";
 
 type ServiceError = Error & { statusCode: number };
-type UploadedImage = { image?: string };
+type UploadedImage = { image?: string; imageKey?: string };
 type PageOptions = { page: number; limit: number };
 
 const serviceError = (message: string, statusCode: number): ServiceError => {
@@ -41,13 +41,11 @@ class ProductService {
 
     const uploadedImage: UploadedImage = {};
     try {
-      Object.assign(
-        uploadedImage,
-        await CloudinaryService.uploadProductImage(image.buffer, image.mimetype),
-      );
+      const uploaded = await R2Service.uploadImage(image.buffer, image.mimetype, "products");
+      Object.assign(uploadedImage, { image: uploaded.url, imageKey: uploaded.key });
       return await ProductRepository.create({ ...data, ...uploadedImage });
     } catch (error) {
-      await this.cleanupImage(uploadedImage.image);
+      await this.cleanupImage(uploadedImage.imageKey);
       throw error;
     }
   }
@@ -68,10 +66,8 @@ class ProductService {
     const uploadedImage: UploadedImage = {};
     try {
       if (image) {
-        Object.assign(
-          uploadedImage,
-          await CloudinaryService.uploadProductImage(image.buffer, image.mimetype),
-        );
+        const uploaded = await R2Service.uploadImage(image.buffer, image.mimetype, "products");
+        Object.assign(uploadedImage, { image: uploaded.url, imageKey: uploaded.key });
       }
 
       const product = await ProductRepository.updateById(objectId, {
@@ -79,8 +75,8 @@ class ProductService {
         ...uploadedImage,
       });
 
-      if (image && existingProduct.image) {
-        await this.cleanupImage(existingProduct.image);
+      if (image && existingProduct.imageKey) {
+        await this.cleanupImage(existingProduct.imageKey);
       }
       return product;
     } catch (error) {
@@ -109,10 +105,10 @@ class ProductService {
     return new Types.ObjectId(value);
   }
 
-  private async cleanupImage(imageUrl?: string) {
-    if (!imageUrl) return;
+  private async cleanupImage(imageKey?: string) {
+    if (!imageKey) return;
     try {
-      await CloudinaryService.deleteImage(imageUrl);
+      await R2Service.deleteImage(imageKey);
     } catch {
       // Cleanup failure must not hide the main request result.
     }

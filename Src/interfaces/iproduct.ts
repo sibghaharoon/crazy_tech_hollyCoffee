@@ -25,6 +25,7 @@ export declare namespace IProductModule {
     title: string;
     description?: string;
     image: string;
+    imageKey?: string;
     price: Money;
     variants: Variant[];
     toppings: Topping[];
@@ -39,6 +40,7 @@ export declare namespace IProductModule {
     title: string;
     description?: string;
     image?: string;
+    imageKey?: string;
     price: Money;
     variants?: Variant[];
     toppings?: Topping[];
@@ -50,6 +52,7 @@ export declare namespace IProductModule {
     title?: string;
     description?: string;
     price?: Money;
+    imageKey?: string;
     variants?: Variant[];
     toppings?: Topping[];
     categoryId?: Types.ObjectId;

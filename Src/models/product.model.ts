@@ -74,6 +74,10 @@ const productSchema = new Schema<IProductModule.Model>(
       required: true,
       trim: true,
     },
+    imageKey: {
+      type: String,
+      trim: true,
+    },
     price: {
       type: moneySchema,
       required: true,
