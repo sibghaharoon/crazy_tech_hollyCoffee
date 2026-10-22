@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import type { Types } from "mongoose";
-import UserRepository from "../repositories/user.repository";
-import AuthService from "../services/auth.service";
+import UserRepository from "../repositories/User.Repository";
+import AuthService from "../services/Auth.Service";
 import type { IUserModule } from "../interfaces/iuser";
 
 export type AuthenticatedUser = IUserModule.ICreateUser & {

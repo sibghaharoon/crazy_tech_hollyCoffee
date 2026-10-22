@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import type { IProductModule } from "../interfaces/iproduct";
 import type { IUserModule } from "../interfaces/iuser";
-import CategoryRepository from "../repositories/category.repository";
+import CategoryRepository from "../repositories/Category.Repository";
 import ProductRepository from "../repositories/product.repository";
 import R2Service from "./r2.service";
 

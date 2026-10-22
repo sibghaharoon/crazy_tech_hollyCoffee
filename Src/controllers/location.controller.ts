@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import LocationRepository from "../repositories/location.repository";
-import parseLocationUpdate from "../validators/location.validator";
+import LocationRepository from "../repositories/Location.Repository";
+import parseLocationUpdate from "../validators/Location.Validator";
 
 const locationController = {
   async getCurrent(req: Request, res: Response) {
