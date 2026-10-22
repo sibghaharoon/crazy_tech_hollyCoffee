@@ -33,6 +33,10 @@ const userSchema = new Schema<IUserModule.ICreateUser>(
       type: String,
       trim: true,
     },
+    profileImageKey: {
+      type: String,
+      trim: true,
+    },
     role: {
       type: String,
       enum: ["buyer", "seller", "admin"],

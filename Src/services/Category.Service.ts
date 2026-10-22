@@ -2,12 +2,14 @@ import { Types } from "mongoose";
 import type { IUserModule } from "../interfaces/iuser";
 import type { ICategoryModule } from "../interfaces/icategory";
 import CategoryRepository from "../repositories/category.repository";
-import CloudinaryService from "./cloudinary.service";
+import R2Service from "./r2.service";
 
 type ServiceError = Error & { statusCode: number };
 type UploadedImages = {
   image?: string;
+  imageKey?: string;
   banner?: string;
+  bannerKey?: string;
 };
 
 const serviceError = (message: string, statusCode: number): ServiceError => {
@@ -36,8 +38,14 @@ class CategoryService {
     const uploadedImages: UploadedImages = {};
 
     try {
-      if (image) Object.assign(uploadedImages, await CloudinaryService.uploadCategoryImage(image.buffer, image.mimetype));
-      if (banner) Object.assign(uploadedImages, await CloudinaryService.uploadCategoryBanner(banner.buffer, banner.mimetype));
+      if (image) {
+        const uploaded = await R2Service.uploadImage(image.buffer, image.mimetype, "categories");
+        Object.assign(uploadedImages, { image: uploaded.url, imageKey: uploaded.key });
+      }
+      if (banner) {
+        const uploaded = await R2Service.uploadImage(banner.buffer, banner.mimetype, "category-banners");
+        Object.assign(uploadedImages, { banner: uploaded.url, bannerKey: uploaded.key });
+      }
       return await CategoryRepository.create({ ...data, ...uploadedImages });
     } catch (error) {
       await this.cleanupUploadedImages(uploadedImages);
@@ -62,18 +70,24 @@ class CategoryService {
     const uploadedImages: UploadedImages = {};
 
     try {
-      if (image) Object.assign(uploadedImages, await CloudinaryService.uploadCategoryImage(image.buffer, image.mimetype));
-      if (banner) Object.assign(uploadedImages, await CloudinaryService.uploadCategoryBanner(banner.buffer, banner.mimetype));
+      if (image) {
+        const uploaded = await R2Service.uploadImage(image.buffer, image.mimetype, "categories");
+        Object.assign(uploadedImages, { image: uploaded.url, imageKey: uploaded.key });
+      }
+      if (banner) {
+        const uploaded = await R2Service.uploadImage(banner.buffer, banner.mimetype, "category-banners");
+        Object.assign(uploadedImages, { banner: uploaded.url, bannerKey: uploaded.key });
+      }
       const category = await CategoryRepository.updateById(objectId, {
         ...data,
         ...uploadedImages,
       });
 
-      if (image && existingCategory.image) {
-        await this.cleanupImage(existingCategory.image);
+      if (image && existingCategory.imageKey) {
+        await this.cleanupImage(existingCategory.imageKey);
       }
-      if (banner && existingCategory.banner) {
-        await this.cleanupImage(existingCategory.banner);
+      if (banner && existingCategory.bannerKey) {
+        await this.cleanupImage(existingCategory.bannerKey);
       }
       return category;
     } catch (error) {
@@ -88,17 +102,17 @@ class CategoryService {
     }
   }
 
-  private async cleanupImage(imageUrl: string) {
+  private async cleanupImage(imageKey: string) {
     try {
-      await CloudinaryService.deleteImage(imageUrl);
+      await R2Service.deleteImage(imageKey);
     } catch {
-      console.error("Cloudinary cleanup failed");
+      // Cleanup failure must not hide the successful database update.
     }
   }
 
   private async cleanupUploadedImages(images: UploadedImages) {
-    if (images.image) await this.cleanupImage(images.image);
-    if (images.banner) await this.cleanupImage(images.banner);
+    if (images.imageKey) await this.cleanupImage(images.imageKey);
+    if (images.bannerKey) await this.cleanupImage(images.bannerKey);
   }
 }
 

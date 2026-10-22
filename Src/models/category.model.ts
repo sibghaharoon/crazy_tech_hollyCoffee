@@ -13,7 +13,15 @@ const categorySchema = new Schema<ICategoryModule.ICategories>(
       type: String,
       trim: true,
     },
+    imageKey: {
+      type: String,
+      trim: true,
+    },
     banner: {
+      type: String,
+      trim: true,
+    },
+    bannerKey: {
       type: String,
       trim: true,
     },
