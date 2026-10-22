@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import CategoryService from "../services/category.service";
+import CategoryRepository from "../repositories/category.repository";
 import categoryValidator from "../validators/category.validator";
 
 const getCategoryFiles = (req: Request) => {
@@ -12,12 +12,12 @@ const getCategoryFiles = (req: Request) => {
 
 const categoryController = {
   async list(_req: Request, res: Response) {
-    const categories = await CategoryService.listActive();
+    const categories = await CategoryRepository.listActive();
     return res.status(200).json({ success: true, data: categories });
   },
 
   async listAll(req: Request, res: Response) {
-    const categories = await CategoryService.listAll(req.user?.role);
+    const categories = await CategoryRepository.listAll(req.user?.role);
     return res.status(200).json({ success: true, data: categories });
   },
 
@@ -26,7 +26,7 @@ const categoryController = {
     if (!parsed.success) return res.status(400).json(parsed);
 
     const files = getCategoryFiles(req);
-    const category = await CategoryService.create(req.user?.role, parsed.data, files.image, files.banner);
+    const category = await CategoryRepository.create(req.user?.role, parsed.data, files.image, files.banner);
     return res.status(201).json({ success: true, data: category });
   },
 
@@ -35,7 +35,7 @@ const categoryController = {
     if (!parsed.success) return res.status(400).json(parsed);
 
     const files = getCategoryFiles(req);
-    const category = await CategoryService.update(
+    const category = await CategoryRepository.update(
       req.user?.role,
       req.params.categoryId,
       parsed.data,

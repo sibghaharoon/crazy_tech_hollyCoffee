@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import type { IUserModule } from '../interfaces/iuser'
 import type { AuthenticatedUser } from '../middlewares/passport'
 import parseProfileUpdate from '../validators/profile.validator'
-import ProfileService from '../services/profile.service'
+import UserRepository from '../repositories/user.repository'
 
 const toProfileResponse = (user: AuthenticatedUser): IUserModule.ProfileResponse => ({
 	id: user._id,
@@ -41,7 +41,7 @@ const userController = {
 			})
 		}
 
-		const user = await ProfileService.update(actorUserId, parsed.data, req.file)
+		const user = await UserRepository.updateProfile(actorUserId, parsed.data, req.file)
 		if (!user) {
 			return res.status(404).json({
 				success: false,
