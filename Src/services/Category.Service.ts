@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import type { IUserModule } from "../interfaces/iuser";
 import type { ICategoryModule } from "../interfaces/icategory";
-import CategoryRepository from "../repositories/Category.Repository";
+import CategoryRepository from "../repositories/category.repository";
 import R2Service from "./r2.service";
 
 type ServiceError = Error & { statusCode: number };

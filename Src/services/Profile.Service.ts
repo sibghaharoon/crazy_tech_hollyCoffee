@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import UserRepository from "../repositories/User.Repository";
+import UserRepository from "../repositories/user.repository";
 import R2Service from "./r2.service";
 import type { IUserModule } from "../interfaces/iuser";
 

@@ -4,7 +4,7 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import environment from "../configs/Environment";
+import environment from "../configs/environment";
 
 type R2Image = {
   url: string;
